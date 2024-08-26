@@ -239,15 +239,6 @@ contract CFMM is CfmmErrors {
     }
 
     /**
-     * @dev Helper function. Returns the smallest number between `x` and `y` arguments.
-     * @param x - 1st argument.
-     * @param y  - 2nd argument
-     */
-    function _min(uint256 x, uint256 y) private pure returns (uint z) {
-        z = x < y ? x : y;
-    }
-
-    /**
      * @dev Helper function. Returns square root from provided `y` argument.
      * @param y - uint256 value.
      */
