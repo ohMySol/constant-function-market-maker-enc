@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 import "fhevm/lib/TFHE.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
-contract EncryptedERC20 is Ownable2Step {
+contract EncryptedTokenB is Ownable2Step {
     event Transfer(address indexed from, address indexed to);
     event Approval(address indexed owner, address indexed spender);
     event Mint(address indexed to, uint64 amount);
@@ -13,7 +13,7 @@ contract EncryptedERC20 is Ownable2Step {
     uint64 private _totalSupply;
     string private _name;
     string private _symbol;
-    uint8 public constant decimals = 6;
+    uint8 public constant decimals = 18;
 
     // A mapping from address to an encrypted balance.
     mapping(address => euint64) internal balances;
