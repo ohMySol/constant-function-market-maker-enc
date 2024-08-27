@@ -5,6 +5,7 @@ import "fhevm/lib/TFHE.sol";
 import "./interfaces/IERC20.sol";
 import "fhevm/gateway/GatewayCaller.sol";
 import {CfmmErrors} from "./interfaces/CustomErrors.sol";
+
 contract CFMM is CfmmErrors {
     event ErrorChanged(address sender);
     
@@ -70,7 +71,7 @@ contract CFMM is CfmmErrors {
             uint256 reserveOut
         ) = _setInOutToken(_tokenIn);
         euint64 _reserveIn = TFHE.asEuint64(reserveIn);
-        euint64 _reserveOut = TFHE.asEuint64(reserveIn);
+        euint64 _reserveOut = TFHE.asEuint64(reserveOut);
 
         tokenIn.transferFrom(msg.sender, address(this), amountIn);
         // 2. Calculate amount of tokens out(include fees), fee 0.3%
@@ -88,8 +89,8 @@ contract CFMM is CfmmErrors {
     }
 
     /**
-     * ! Function is not working, because I am got stuck with the division. Becasue it is using a 
-     * plain text divisor I can't devide for encrypted value, as a result I can't convert reserves
+     * ! Function is not working, because I am got stuck with the division. It is using a 
+     * plain text divisor and I can't divide for encrypted value, as a result I can't convert reserves
      * to encrypted value.
      * @notice Users(future LPs) can add liquidity of the token pair in the liquidity pool,
      * and earn fees.
@@ -114,7 +115,6 @@ contract CFMM is CfmmErrors {
         // Fund pool with tokenA & tokenB
         TOKEN_A.transferFrom(msg.sender, address(this), amountA);
         TOKEN_B.transferFrom(msg.sender, address(this), amountB);
-        euint64 balanceA = TOKEN_A.balanceOf(address(this));
         euint64 balanceB = TOKEN_B.balanceOf(address(this));
         euint64 _totalSharesSupply = totalSharesSupply;
         // Mint LP tokens(shares)
@@ -135,9 +135,9 @@ contract CFMM is CfmmErrors {
     }
 
     /**
-     * ! Function is not working, because I am got stuck again with the _updateReserves() function. 
-     * Becasue it is using a plain text uint64, but I am applying euint64, and this function is used in
-     * several functions, so I can't easily change the type and finish with this.
+     * ! Function is not working, because I am got stuck again with the '_updateReserves()' function. 
+     * '_updateReserves()' is using a plain text uint64, but I am applying euint64, and this function is used in
+     * several functions, so I can't just change the type.
      * @notice LPs can call this function to return their tokens from a liquidity pool,
      * plus earned fees. 
      * @dev Function calculates the returned amount of `amountA` tokens and `amountB` 
@@ -255,6 +255,13 @@ contract CFMM is CfmmErrors {
         }
     }
 
+    /**
+     * @dev In encrypted version of the contract it is hard to use usual custom errors,
+     * so I decided to use a provided method from fhEVM documentation to catch errors.
+     * Hope in the future we will have a method for more robust and smooth error handling.
+     * @param error - error code related to a specific error. 
+     * @param addr - address of the caller.
+     */
     function _setLastError(euint8 error, address addr) private {
         latestError[addr] = LastError(error, block.timestamp);
         emit ErrorChanged(addr);
