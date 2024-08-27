@@ -1,8 +1,8 @@
 import { expect } from "chai";
-
 import { createInstances, decrypt64 } from "../instance";
 import { getSigners, initSigners } from "../signers";
-import { deployEncryptedERC20Fixture } from "./EncryptedERC20.fixture";
+// Using EncryptedTokenA for test, EncryptedTokenB is identical.
+import { deployEncryptedTokenAFixture } from "./EncryptedERC20.fixture";
 
 describe("EncryptedERC20", function () {
   before(async function () {
@@ -11,7 +11,7 @@ describe("EncryptedERC20", function () {
   });
 
   beforeEach(async function () {
-    const contract = await deployEncryptedERC20Fixture();
+    const contract = await deployEncryptedTokenAFixture();
     this.contractAddress = await contract.getAddress();
     this.erc20 = contract;
     this.instances = await createInstances(this.signers);
