@@ -1,4 +1,5 @@
 import "@nomicfoundation/hardhat-toolbox";
+import '@nomiclabs/hardhat-ethers'
 import dotenv from "dotenv";
 import * as fs from "fs-extra";
 import "hardhat-deploy";
