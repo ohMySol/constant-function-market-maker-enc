@@ -57,7 +57,7 @@ contract CFMM is CfmmErrors {
      * @param _tokenIn - address of the token for sell.
      * @param _amountIn - amount of tokens user want to sell. 
      */
-    function swap(address _tokenIn, uint256 _amountIn) external returns (euint64 amountOut) {
+    function swap(address _tokenIn, uint64 _amountIn) external returns (euint64 amountOut) {
         if(_tokenIn != address(TOKEN_A) && _tokenIn != address(TOKEN_B)) {
             revert CFMM_UnsupportedTokenAddress();
         }
@@ -115,6 +115,7 @@ contract CFMM is CfmmErrors {
         // Fund pool with tokenA & tokenB
         TOKEN_A.transferFrom(msg.sender, address(this), amountA);
         TOKEN_B.transferFrom(msg.sender, address(this), amountB);
+        euint64 balanceA = TOKEN_A.balanceOf(address(this));
         euint64 balanceB = TOKEN_B.balanceOf(address(this));
         euint64 _totalSharesSupply = totalSharesSupply;
         // Mint LP tokens(shares)
